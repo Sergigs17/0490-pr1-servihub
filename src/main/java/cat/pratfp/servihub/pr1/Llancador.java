@@ -157,13 +157,15 @@ public final class Llancador {
         return sortida;
     }
 
+
     // =====================================================================
     // BLOC G · Temps màxim (forats 12, 13 i 14) · proves G1-G3
     // =====================================================================
 
     /**
      * Llança un procés i li dona un temps màxim per acabar.
-     * Si no acaba a temps, es demana que acabi; si en 2 segons encara és viu, es mata a la força.
+     * Si no acaba a temps, es demana que acabi; si en 2 segons encara és viu,
+     * es mata a la força.
      *
      * @param nom    nom de la feina
      * @param segons temps màxim d'execució
@@ -174,24 +176,31 @@ public final class Llancador {
             throws IOException, InterruptedException {
         long inici = System.currentTimeMillis();
         Process p = new ProcessBuilder(ordre).inheritIO().start();
-        // TODO FORAT 12 · Espera el fill com a màxim «segons» segons. haAcabat ha de dir si ha acabat dins del temps.
-        boolean haAcabat = Forat.n(12);
+
+        // TODO FORAT 12 · Espera el fill com a màxim «segons» segons.
+        // haAcabat ha de dir si ha acabat dins del temps.
+        boolean haAcabat = p.waitFor(segons, TimeUnit.SECONDS);
+
         Estat estat;
         if (haAcabat) {
             estat = Estat.segonsCodi(p.exitValue());
         } else {
             // TODO FORAT 13 · S'ha passat de temps: demana-li amablement que acabi.
-            Forat.n(13);
+            p.destroy();
+
             if (!p.waitFor(2, TimeUnit.SECONDS)) {
                 // TODO FORAT 14 · Al cap de 2 segons encara és viu: mata'l a la força.
-                Forat.n(14);
+                p.destroyForcibly();
                 p.waitFor();
             }
+
             estat = Estat.AVORTADA;
         }
+
         long durada = System.currentTimeMillis() - inici;
         return new Resultat(nom, p.pid(), p.exitValue(), estat, durada, "", "");
     }
+
 
     // =====================================================================
     // BLOC H · Diverses feines en paral·lel (forats 15 i 16) · proves H1-H2
