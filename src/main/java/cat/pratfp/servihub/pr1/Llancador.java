@@ -273,6 +273,7 @@ public final class Llancador {
     }
 
 
+
     // =====================================================================
     // BLOC J · Canonada entre processos (forat 19) · proves J1-J2
     // =====================================================================
@@ -289,15 +290,20 @@ public final class Llancador {
         for (String[] ordre : etapes) {
             builders.add(new ProcessBuilder(ordre));
         }
+
         // TODO FORAT 19 · Llança totes les etapes de cop, connectades entre elles (sessió 4, Ex4Canonada).
-        List<Process> processos = Forat.n(19);
+        List<Process> processos = ProcessBuilder.startPipeline(builders);
+
         Process ultim = processos.get(processos.size() - 1);
         String sortida = llegeixTot(ultim.getInputStream());
+
         for (Process p : processos) {
             p.waitFor();
         }
+
         return sortida;
     }
+
 
     // =====================================================================
     // BLOC K · El procés pare (forat 20) · prova K1
