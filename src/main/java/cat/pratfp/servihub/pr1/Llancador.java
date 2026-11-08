@@ -40,11 +40,11 @@ public final class Llancador {
     public static int executa(String... ordre) throws IOException, InterruptedException {
         ProcessBuilder pb = new ProcessBuilder(ordre);
         // TODO FORAT 01 · Fes que el fill escrigui directament a la consola del pare (sessió 2, Ex2LlancaIEspera).
-        Forat.n(1);
+        pb.inheritIO();
         // TODO FORAT 02 · Llança el procés fill i desa'l a la variable p.
-        Process p = Forat.n(2);
+        Process p = pb.start();
         // TODO FORAT 03 · Espera que el fill acabi i retorna el seu codi de retorn.
-        return Forat.n(3);
+        return p.waitFor();
     }
 
     // =====================================================================
