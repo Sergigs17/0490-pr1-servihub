@@ -202,6 +202,7 @@ public final class Llancador {
     }
 
 
+
     // =====================================================================
     // BLOC H · Diverses feines en paral·lel (forats 15 i 16) · proves H1-H2
     // =====================================================================
@@ -216,20 +217,26 @@ public final class Llancador {
     public static List<Resultat> executaEnParallel(List<Feina> feines) throws IOException, InterruptedException {
         long inici = System.currentTimeMillis();
         List<Process> fills = new ArrayList<>();
+
         for (Feina f : feines) {
             // TODO FORAT 15 · Llança la feina f (amb inheritIO) i afegeix el procés a la llista fills. Aquí NO l'esperis.
-            Forat.n(15);
+            fills.add(new ProcessBuilder(f.ordre()).inheritIO().start());
         }
+
         List<Resultat> resultats = new ArrayList<>();
         for (int i = 0; i < feines.size(); i++) {
             Process p = fills.get(i);
+
             // TODO FORAT 16 · Ara sí: espera que aquest fill acabi i desa'n el codi de retorn.
-            int codi = Forat.n(16);
+            int codi = p.waitFor();
+
             long durada = System.currentTimeMillis() - inici;
             resultats.add(new Resultat(feines.get(i).nom(), p.pid(), codi, Estat.segonsCodi(codi), durada, "", ""));
         }
+
         return resultats;
     }
+
 
     // =====================================================================
     // BLOC I · Sortida i error a fitxers (forats 17 i 18) · proves I1-I2
