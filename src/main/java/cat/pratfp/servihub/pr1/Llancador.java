@@ -238,6 +238,7 @@ public final class Llancador {
     }
 
 
+
     // =====================================================================
     // BLOC I · Sortida i error a fitxers (forats 17 i 18) · proves I1-I2
     // =====================================================================
@@ -257,16 +258,20 @@ public final class Llancador {
         long inici = System.currentTimeMillis();
         Files.createDirectories(carpeta);
         ProcessBuilder pb = new ProcessBuilder(ordre);
+
         // TODO FORAT 17 · Fes que el directori de treball del fill sigui la carpeta.
-        Forat.n(17);
+        pb.directory(carpeta.toFile());
+
         // TODO FORAT 18 · Redirigeix la sortida ESTÀNDARD del fill al fitxer <carpeta>/<nom>.out (l'error ja està fet a sota).
-        Forat.n(18);
+        pb.redirectOutput(carpeta.resolve(nom + ".out").toFile());
+
         pb.redirectError(carpeta.resolve(nom + ".err").toFile());
         Process p = pb.start();
         int codi = p.waitFor();
         long durada = System.currentTimeMillis() - inici;
         return new Resultat(nom, p.pid(), codi, Estat.segonsCodi(codi), durada, "", "");
     }
+
 
     // =====================================================================
     // BLOC J · Canonada entre processos (forat 19) · proves J1-J2
