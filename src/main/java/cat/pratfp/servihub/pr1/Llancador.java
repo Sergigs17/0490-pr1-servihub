@@ -305,6 +305,7 @@ public final class Llancador {
     }
 
 
+
     // =====================================================================
     // BLOC K · El procés pare (forat 20) · prova K1
     // =====================================================================
@@ -316,6 +317,6 @@ public final class Llancador {
      */
     public static long pidDeServiHub() {
         // TODO FORAT 20 · Retorna el PID del procés actual (sessió 2, Ex1ProcessosDelSistema).
-        return Forat.n(20);
+        return ProcessHandle.current().pid();
     }
 }
